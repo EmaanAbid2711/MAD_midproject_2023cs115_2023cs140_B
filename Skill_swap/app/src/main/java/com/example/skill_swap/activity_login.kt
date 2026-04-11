@@ -2,7 +2,7 @@ package com.example.skill_swap
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Button
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 
 class activity_login : AppCompatActivity() {
@@ -11,14 +11,32 @@ class activity_login : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
+        val email = findViewById<EditText>(R.id.etLoginEmail)
+        val pass = findViewById<EditText>(R.id.etLoginPass)
         val loginBtn = findViewById<Button>(R.id.btnLogin)
-        val signupBtn = findViewById<Button>(R.id.btnSignup)
+        val goSignup = findViewById<TextView>(R.id.tvGoSignup)
 
         loginBtn.setOnClickListener {
-            startActivity(Intent(this, HomeActivity::class.java))
+
+            val userEmail = email.text.toString().trim()
+
+            if (userEmail.isEmpty()) {
+                Toast.makeText(this, "Enter email", Toast.LENGTH_SHORT).show()
+            } else {
+
+                // 🔥 SAVE DATA
+                val prefs = getSharedPreferences("UserData", MODE_PRIVATE)
+                val editor = prefs.edit()
+                editor.putString("name", "User")
+                editor.putString("email", userEmail)
+                editor.apply()
+
+                startActivity(Intent(this, HomeActivity::class.java))
+                finish()
+            }
         }
 
-        signupBtn.setOnClickListener {
+        goSignup.setOnClickListener {
             startActivity(Intent(this, SignupActivity::class.java))
         }
     }

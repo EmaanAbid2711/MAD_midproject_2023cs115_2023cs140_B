@@ -1,48 +1,54 @@
 package com.example.skill_swap
 
-import android.content.Intent
 import android.os.Bundle
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.navigation.NavigationView
 
 class HomeActivity : AppCompatActivity() {
+
+    private val userList = mutableListOf<User>()
+    private lateinit var adapter: UserAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
-        // RecyclerView
-        val recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
+        val prefs = getSharedPreferences("UserData", MODE_PRIVATE)
+        val name = prefs.getString("name", "User")
 
-        val users = listOf(
-            User("Ali", "C++", "Design"),
-            User("Sara", "Design", "C++")
-        )
+        val tvWelcome = findViewById<TextView>(R.id.tvWelcome)
+        val etHave = findViewById<EditText>(R.id.etSkillHave)
+        val etWant = findViewById<EditText>(R.id.etSkillWant)
+        val btnAdd = findViewById<Button>(R.id.btnAddSkill)
+        val recycler = findViewById<RecyclerView>(R.id.recyclerView)
 
-        recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter = UserAdapter(users)
+        tvWelcome.text = "Welcome, $name"
 
-        // Navigation Drawer
-        val navView = findViewById<NavigationView>(R.id.navigationView)
+        adapter = UserAdapter(userList)
+        recycler.layoutManager = LinearLayoutManager(this)
+        recycler.adapter = adapter
 
-        navView.setNavigationItemSelectedListener {
-            when (it.itemId) {
+        btnAdd.setOnClickListener {
 
-                R.id.home -> {
-                    // already here
-                }
+            val have = etHave.text.toString()
+            val want = etWant.text.toString()
 
-                R.id.profile -> {
-                    startActivity(Intent(this, ProfileActivity::class.java))
-                }
+            if (have.isEmpty() || want.isEmpty()) {
+                Toast.makeText(this, "Enter skills", Toast.LENGTH_SHORT).show()
+            } else {
 
-                R.id.sessions -> {
-                    startActivity(Intent(this, SessionsActivity::class.java))
-                }
+                val user = User(name!!, have, want)
+                userList.add(user)
+
+                adapter.notifyDataSetChanged()
+
+                etHave.text.clear()
+                etWant.text.clear()
+
+                Toast.makeText(this, "Card Added", Toast.LENGTH_SHORT).show()
             }
-            true
         }
     }
 }
