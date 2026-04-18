@@ -1,9 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:padding="10dp"
     android:orientation="vertical"
-    android:padding="16dp"
-    android:background="#dddddd"
-    android:layout_margin="10dp"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -19,9 +16,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:max="100"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
     <Button
-        android:id="@+id/btnBook"
-        android:text="Book Slot"
+        android:id="@+id/btnRequest"
+        android:text="Send Request"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 </LinearLayout>

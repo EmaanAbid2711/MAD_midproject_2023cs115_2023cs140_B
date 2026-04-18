@@ -1,36 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:padding="10dp"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <!-- Welcome -->
     <TextView
         android:id="@+id/tvWelcome"
+        android:text="Welcome"
         android:textSize="18sp"
         android:textStyle="bold"
         android:padding="8dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
+    <!-- Skill Have -->
     <EditText
         android:id="@+id/etSkillHave"
         android:hint="Skill You Have"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
+    <!-- Skill Want -->
     <EditText
         android:id="@+id/etSkillWant"
         android:hint="Skill You Want"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
+    <!-- 🔥 ADD THIS (Spinner - FIX ERROR) -->
+    <Spinner
+        android:id="@+id/spinnerLevel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <!-- 🔥 FIX ID (must match Kotlin) -->
     <Button
-        android:id="@+id/btnAddSkill"
+        android:id="@+id/btnAdd"
         android:text="Add Skill"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
+    <!-- RecyclerView -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"

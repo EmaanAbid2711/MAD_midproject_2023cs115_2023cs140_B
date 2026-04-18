@@ -4,8 +4,10 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 
-class UserAdapter(private val users: List<User>) :
-    RecyclerView.Adapter<UserViewHolder>() {
+class UserAdapter(
+    private val list: List<User>,
+    private val currentUser: String
+) : RecyclerView.Adapter<UserViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -13,9 +15,9 @@ class UserAdapter(private val users: List<User>) :
         return UserViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
-        holder.bind(users[position])
-    }
+    override fun getItemCount() = list.size
 
-    override fun getItemCount() = users.size
+    override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
+        holder.bind(list[position], currentUser)
+    }
 }

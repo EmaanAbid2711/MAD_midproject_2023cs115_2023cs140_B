@@ -1,39 +1,41 @@
 package com.example.skill_swap
 
-import android.app.AlertDialog
-import android.content.Intent
 import android.view.View
 import android.widget.*
 import androidx.recyclerview.widget.RecyclerView
 
 class UserViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-    fun bind(user: User) {
+    fun bind(user: User, currentUser: String) {
 
         val name = itemView.findViewById<TextView>(R.id.tvName)
         val skill = itemView.findViewById<TextView>(R.id.tvSkill)
-        val btn = itemView.findViewById<Button>(R.id.btnBook)
+        val btn = itemView.findViewById<Button>(R.id.btnRequest)
+        val progress = itemView.findViewById<ProgressBar>(R.id.progressBar)
 
         name.text = user.name
-        skill.text = "${user.skillHave} ➝ ${user.skillWant}"
+        skill.text = "${user.skillHave} → ${user.skillWant}"
 
+        // PROGRESS BAR
+        when (user.level) {
+            "Beginner" -> progress.progress = 35
+            "Intermediate" -> progress.progress = 65
+            "Expert" -> progress.progress = 100
+        }
+
+        // SEND REQUEST
         btn.setOnClickListener {
 
-            val slots = arrayOf("10 AM", "2 PM", "6 PM")
+            val request = Request(
+                sender = currentUser,
+                receiver = user.name,
+                skill = user.skillHave,
+                status = "Pending"
+            )
 
-            AlertDialog.Builder(itemView.context)
-                .setTitle("Select Slot")
-                .setItems(slots) { _, which ->
+            RequestManager.requestList.add(request)
 
-                    val selected = slots[which]
-
-                    Toast.makeText(
-                        itemView.context,
-                        "Booked at $selected",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-                .show()
+            Toast.makeText(itemView.context, "Request Sent", Toast.LENGTH_SHORT).show()
         }
     }
 }
