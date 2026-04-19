@@ -25,11 +25,11 @@ class HomeActivity : AppCompatActivity() {
         override fun onReceive(context: Context?, intent: Intent?) {
             if (intent?.action == Intent.ACTION_AIRPLANE_MODE_CHANGED) {
                 val isOn = isAirplaneModeOn()
-                if (isOn) {
-                    Toast.makeText(this@HomeActivity, "✈ Airplane Mode ON", Toast.LENGTH_SHORT).show()
-                } else {
-                    Toast.makeText(this@HomeActivity, "Airplane Mode OFF", Toast.LENGTH_SHORT).show()
-                }
+                Toast.makeText(
+                    this@HomeActivity,
+                    if (isOn) "✈ Airplane Mode ON" else "Airplane Mode OFF",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
     }
@@ -40,7 +40,9 @@ class HomeActivity : AppCompatActivity() {
     }
 
     // ✅ IMAGE PICKER
-    val imagePicker = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+    val imagePicker = registerForActivityResult(
+        ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
         if (uri != null) {
             val inputStream = contentResolver.openInputStream(uri)
             val bytes = inputStream?.readBytes()
@@ -48,7 +50,6 @@ class HomeActivity : AppCompatActivity() {
 
             if (bytes != null) {
                 val base64 = Base64.encodeToString(bytes, Base64.DEFAULT)
-
                 val prefs = getSharedPreferences("UserData", MODE_PRIVATE)
                 val name = prefs.getString("name", "") ?: ""
 
@@ -82,10 +83,9 @@ class HomeActivity : AppCompatActivity() {
 
         val prefs = getSharedPreferences("UserData", MODE_PRIVATE)
         val name = prefs.getString("name", "") ?: ""
-
         tvName.text = name
 
-        // ✅ LOAD PROFILE IMAGE
+        // ✅ LOAD IMAGE
         val savedImage = prefs.getString("profile_$name", null)
         if (savedImage != null) {
             try {
@@ -108,7 +108,9 @@ class HomeActivity : AppCompatActivity() {
             android.R.layout.simple_spinner_item,
             levels
         )
-        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinnerAdapter.setDropDownViewResource(
+            android.R.layout.simple_spinner_dropdown_item
+        )
         spinner.adapter = spinnerAdapter
 
         // ✅ RECYCLER
@@ -120,12 +122,14 @@ class HomeActivity : AppCompatActivity() {
             drawer.openDrawer(Gravity.START)
         }
 
-        // ✅ SEARCH
+        // ✅ SEARCH (FIXED - removes already requested users)
         btnSearchDrawer.setOnClickListener {
             val have = skillHave.text.toString()
             val want = skillWant.text.toString()
 
             val allUsers = StorageUtil.getUsers(this)
+            val allRequests = StorageUtil.getRequests(this)
+
             matchedUsers.clear()
 
             for (u in allUsers) {
@@ -133,7 +137,22 @@ class HomeActivity : AppCompatActivity() {
                     u.skillHave.contains(want) &&
                     u.skillWant.contains(have)
                 ) {
-                    matchedUsers.add(u)
+
+                    var alreadyRequested = false
+
+                    for (r in allRequests) {
+                        if (r.sender == name &&
+                            r.receiver == u.name &&
+                            r.skill == u.skillHave
+                        ) {
+                            alreadyRequested = true
+                            break
+                        }
+                    }
+
+                    if (!alreadyRequested) {
+                        matchedUsers.add(u)
+                    }
                 }
             }
 
@@ -162,7 +181,7 @@ class HomeActivity : AppCompatActivity() {
             finish()
         }
 
-        // ✅ ADD SKILL (APPEND + VALIDATION)
+        // ✅ ADD SKILL (VALIDATION + APPEND)
         btnAdd.setOnClickListener {
 
             val have = skillHave.text.toString().trim()
@@ -184,9 +203,12 @@ class HomeActivity : AppCompatActivity() {
                     val oldWant = users[i].skillWant
                     val oldLevel = users[i].level
 
-                    val newHave = if (oldHave.isNotEmpty()) "$oldHave, $have" else have
-                    val newWant = if (oldWant.isNotEmpty()) "$oldWant, $want" else want
-                    val newLevel = if (oldLevel.isNotEmpty()) "$oldLevel, $level" else level
+                    val newHave =
+                        if (oldHave.isNotEmpty()) "$oldHave, $have" else have
+                    val newWant =
+                        if (oldWant.isNotEmpty()) "$oldWant, $want" else want
+                    val newLevel =
+                        if (oldLevel.isNotEmpty()) "$oldLevel, $level" else level
 
                     users[i] = User(
                         name,
@@ -211,8 +233,10 @@ class HomeActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        registerReceiver(airplaneReceiver,
-            IntentFilter(Intent.ACTION_AIRPLANE_MODE_CHANGED))
+        registerReceiver(
+            airplaneReceiver,
+            IntentFilter(Intent.ACTION_AIRPLANE_MODE_CHANGED)
+        )
     }
 
     override fun onPause() {
