@@ -1,10 +1,12 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_margin="10dp"
+    android:backgroundTint="#B5E18B"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
     <LinearLayout
         android:padding="16dp"
+        android:backgroundTint="#F0FFC2"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -12,6 +14,7 @@
         <TextView
             android:id="@+id/tvName"
             android:text="Name"
+            android:textColor="#28396C"
             android:textSize="18sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
@@ -19,6 +22,7 @@
         <TextView
             android:id="@+id/tvSkill"
             android:text="Skill"
+            android:textColor="#28396C"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
@@ -26,6 +30,8 @@
         <Button
             android:id="@+id/btnBook"
             android:text="Book Slot"
+            android:textColor="#EAE6BC"
+            android:backgroundTint="#28396C"
             android:layout_marginTop="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
